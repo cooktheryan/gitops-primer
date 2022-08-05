@@ -228,7 +228,7 @@ jobs:
           file: "./Dockerfile"
           platforms: "linux/amd64,linux/arm64"
           push: true
-          tags: ${{ env.CONTROLLER_IMAGE }}
+          tags: ${{ env.OPERATOR_IMAGE }}
 
 
   push-export:
@@ -261,7 +261,7 @@ jobs:
           file: "./Dockerfile"
           platforms: "linux/amd64,linux/arm64"
           push: true
-          tags: ${{ env.CONTROLLER_IMAGE }}
+          tags: ${{ env.EXPORT_IMAGE }}
 
   push-bundle:
     name: Push bundle container to registry
@@ -293,7 +293,7 @@ jobs:
           file: "./Dockerfile"
           platforms: "linux/amd64,linux/arm64"
           push: true
-          tags: ${{ env.CONTROLLER_IMAGE }}
+          tags: ${{ env.BUNDLE_IMAGE }}
 
   push-downloader:
     name: Push downloader image to registry
@@ -325,7 +325,7 @@ jobs:
           file: "./Dockerfile"
           platforms: "linux/amd64,linux/arm64"
           push: true
-          tags: ${{ env.CONTROLLER_IMAGE }}
+          tags: ${{ env.DOWNLOADER_IMAGE }}
 
   push-webhook:
     name: Push webhook image to registry
@@ -357,4 +357,4 @@ jobs:
           file: "./Dockerfile"
           platforms: "linux/amd64,linux/arm64"
           push: true
-          tags: ${{ env.CONTROLLER_IMAGE }}
+          tags: ${{ env.WEBHOOK_IMAGE }}
