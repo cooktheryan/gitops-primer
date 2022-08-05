@@ -10,11 +10,11 @@ env:
   GO_VERSION: "1.17"
   KIND_VERSION: "0.9.0"
   GO111MODULE: "on"
-  OPERATOR_IMAGE: "quay.io/rcook/gitops-primer"
-  BUNDLE_IMAGE: "quay.io/rcook/gitops-primer-bundle"
-  EXPORT_IMAGE: "quay.io/rcook/gitops-primer-export"
-  DOWNLOADER_IMAGE: "quay.io/rcook/gitops-primer-downloader"
-  WEBHOOK_IMAGE: "quay.io/rcook/gitops-primer-webhook"
+  OPERATOR_IMAGE: "quay.io/konveyor/gitops-primer"
+  BUNDLE_IMAGE: "quay.io/konveyor/gitops-primer-bundle"
+  EXPORT_IMAGE: "quay.io/konveyor/gitops-primer-export"
+  DOWNLOADER_IMAGE: "quay.io/konveyor/gitops-primer-downloader"
+  WEBHOOK_IMAGE: "quay.io/konveyor/gitops-primer-webhook"
   TAG: v0.0.10
 
 
@@ -89,10 +89,7 @@ jobs:
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
       - name: Push bundle image to quay
-        run: |
-          docker tag quay.io/konveyor/gitops-primer-bundle:v0.0.10 quay.io/rcook/gitops-primer-bundle:v0.0.10
-          docker tag quay.io/rcook/gitops-primer-bundle:v0.0.10 ${BUNDLE_IMAGE}:latest
-          docker push ${BUNDLE_IMAGE}:latest
+        run: docker push ${BUNDLE_IMAGE}:latest
 
       - name: Export container image
         run: docker save -o /tmp/bundle.tar ${BUNDLE_IMAGE}
@@ -115,9 +112,7 @@ jobs:
         run: make -C export image
 
       - name: Export container image
-        run: |
-           docker tag quay.io/konveyor/gitops-primer-export:latest ${EXPORT_IMAGE}
-           docker save -o /tmp/export.tar ${EXPORT_IMAGE}
+        run: docker save -o /tmp/export.tar ${EXPORT_IMAGE}
 
       - name: Login to Quay
         uses: docker/login-action@v1
@@ -147,9 +142,7 @@ jobs:
         run: make -C downloader image
 
       - name: Export container image
-        run: | 
-          docker tag quay.io/konveyor/gitops-primer-downloader:latest ${DOWNLOADER_IMAGE}
-          docker save -o /tmp/downloader.tar ${DOWNLOADER_IMAGE}
+        run: docker save -o /tmp/downloader.tar ${DOWNLOADER_IMAGE}
 
       - name: Login to Quay
         uses: docker/login-action@v1
@@ -178,9 +171,7 @@ jobs:
         run: make -C webhook image
 
       - name: Export container image
-        run: |
-          docker tag quay.io/konveyor/gitops-primer-webhook:latest ${WEBHOOK_IMAGE}
-          docker save -o /tmp/webhook.tar ${WEBHOOK_IMAGE}
+        run: docker save -o /tmp/webhook.tar ${WEBHOOK_IMAGE}
 
       - name: Login to Quay
         uses: docker/login-action@v1
@@ -217,7 +208,7 @@ jobs:
 
       - name: Login to the registry
         run: |
-          [[ "${CONTROLLER_IMAGE}" =~ ^([^/]+)/[^/]+/[^/]+ ]] && REGISTRY="${BASH_REMATCH[1]}" || REGISTRY="quay.io"
+          [[ "${OPERATOR_IMAGE}" =~ ^([^/]+)/[^/]+/[^/]+ ]] && REGISTRY="${BASH_REMATCH[1]}" || REGISTRY="quay.io"
           echo "Attempting docker login to: ${REGISTRY}"
           echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login -u "${{ secrets.REGISTRY_USERNAME }}" --password-stdin ${REGISTRY}
    
@@ -250,7 +241,7 @@ jobs:
 
       - name: Login to the registry
         run: |
-          [[ "${CONTROLLER_IMAGE}" =~ ^([^/]+)/[^/]+/[^/]+ ]] && REGISTRY="${BASH_REMATCH[1]}" || REGISTRY="quay.io"
+          [[ "${EXPORT_IMAGE}" =~ ^([^/]+)/[^/]+/[^/]+ ]] && REGISTRY="${BASH_REMATCH[1]}" || REGISTRY="quay.io"
           echo "Attempting docker login to: ${REGISTRY}"
           echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login -u "${{ secrets.REGISTRY_USERNAME }}" --password-stdin ${REGISTRY}
    
@@ -282,7 +273,7 @@ jobs:
 
       - name: Login to the registry
         run: |
-          [[ "${CONTROLLER_IMAGE}" =~ ^([^/]+)/[^/]+/[^/]+ ]] && REGISTRY="${BASH_REMATCH[1]}" || REGISTRY="quay.io"
+          [[ "${BUNDLE_IMAGE}" =~ ^([^/]+)/[^/]+/[^/]+ ]] && REGISTRY="${BASH_REMATCH[1]}" || REGISTRY="quay.io"
           echo "Attempting docker login to: ${REGISTRY}"
           echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login -u "${{ secrets.REGISTRY_USERNAME }}" --password-stdin ${REGISTRY}
    
@@ -314,7 +305,7 @@ jobs:
 
       - name: Login to the registry
         run: |
-          [[ "${CONTROLLER_IMAGE}" =~ ^([^/]+)/[^/]+/[^/]+ ]] && REGISTRY="${BASH_REMATCH[1]}" || REGISTRY="quay.io"
+          [[ "${DOWNLOADER_IMAGE}" =~ ^([^/]+)/[^/]+/[^/]+ ]] && REGISTRY="${BASH_REMATCH[1]}" || REGISTRY="quay.io"
           echo "Attempting docker login to: ${REGISTRY}"
           echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login -u "${{ secrets.REGISTRY_USERNAME }}" --password-stdin ${REGISTRY}
    
@@ -346,7 +337,7 @@ jobs:
 
       - name: Login to the registry
         run: |
-          [[ "${CONTROLLER_IMAGE}" =~ ^([^/]+)/[^/]+/[^/]+ ]] && REGISTRY="${BASH_REMATCH[1]}" || REGISTRY="quay.io"
+          [[ "${WEBHOOK_IMAGE}" =~ ^([^/]+)/[^/]+/[^/]+ ]] && REGISTRY="${BASH_REMATCH[1]}" || REGISTRY="quay.io"
           echo "Attempting docker login to: ${REGISTRY}"
           echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login -u "${{ secrets.REGISTRY_USERNAME }}" --password-stdin ${REGISTRY}
    
