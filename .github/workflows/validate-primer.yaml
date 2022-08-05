@@ -91,7 +91,7 @@ jobs:
       - name: Push bundle image to quay
         run: |
           docker tag ${BUNDLE_IMAGE}:${TAG} ${BUNDLE_IMAGE}:latest
-          docker push ${BUNDLE_IMAGE}:lates
+          docker push ${BUNDLE_IMAGE}:latest
 
       - name: Export container image
         run: docker save -o /tmp/bundle.tar ${BUNDLE_IMAGE}
