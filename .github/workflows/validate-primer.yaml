@@ -89,7 +89,9 @@ jobs:
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
       - name: Push bundle image to quay
-        run: docker push ${BUNDLE_IMAGE}:latest
+        run: |
+          docker tag ${BUNDLE_IMAGE}:${TAG} ${BUNDLE_IMAGE}:latest
+          docker push ${BUNDLE_IMAGE}:lates
 
       - name: Export container image
         run: docker save -o /tmp/bundle.tar ${BUNDLE_IMAGE}
@@ -192,6 +194,9 @@ jobs:
   push-operator:
     name: Push operator container to registry
     needs: build-export
+    if: >
+      (github.event_name == 'push' || github.event_name == 'schedule') &&
+      (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v'))
     runs-on: ubuntu-20.04
 
     steps:
@@ -225,6 +230,9 @@ jobs:
   push-export:
     name: Push export container to registry
     needs: [build-webhook, build-operator, build-bundle, build-downloader, build-export]
+    if: >
+      (github.event_name == 'push' || github.event_name == 'schedule') &&
+      (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v'))
     runs-on: ubuntu-20.04
 
     steps:
@@ -257,6 +265,9 @@ jobs:
   push-bundle:
     name: Push bundle container to registry
     needs: [build-webhook, build-operator, build-bundle, build-downloader, build-export]
+    if: >
+      (github.event_name == 'push' || github.event_name == 'schedule') &&
+      (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v'))
     runs-on: ubuntu-20.04
 
     steps:
@@ -289,6 +300,9 @@ jobs:
   push-downloader:
     name: Push downloader image to registry
     needs: [build-webhook, build-operator, build-bundle, build-downloader, build-export]
+    if: >
+      (github.event_name == 'push' || github.event_name == 'schedule') &&
+      (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v'))
     runs-on: ubuntu-20.04
 
     steps:
@@ -321,6 +335,9 @@ jobs:
   push-webhook:
     name: Push webhook image to registry
     needs: [build-webhook, build-operator, build-bundle, build-downloader, build-export]
+    if: >
+      (github.event_name == 'push' || github.event_name == 'schedule') &&
+      (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v'))
     runs-on: ubuntu-20.04
 
     steps:
