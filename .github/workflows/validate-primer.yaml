@@ -60,7 +60,9 @@ jobs:
         run: make docker-build IMG=${OPERATOR_IMAGE}
 
       - name: Export container image
-        run: docker save -o /tmp/operator.tar ${OPERATOR_IMAGE}
+        run: |
+          docker tag quay.io/konveyor/gitops-primer:latest ${OPERATOR_IMAGE}
+          docker save -o /tmp/operator.tar ${OPERATOR_IMAGE}
 
       - name: Login to Quay
         uses: docker/login-action@v1
@@ -111,6 +113,7 @@ jobs:
 
       - name: Push bundle image to quay
         run: |
+          docker tag quay.io/konveyor/gitops-primer-bundle:latest ${BUNDLE_IMAGE}
           docker tag ${BUNDLE_IMAGE}:${TAG} ${BUNDLE_IMAGE}:latest
           docker push ${BUNDLE_IMAGE}:latest
 
@@ -135,7 +138,9 @@ jobs:
         run: make -C export image
 
       - name: Export container image
-        run: docker save -o /tmp/export.tar ${EXPORT_IMAGE}
+        run: |
+           podman tag quay.io/konveyor/gitops-primer-export:latest ${EXPORT_IMAGE}
+           docker save -o /tmp/export.tar ${EXPORT_IMAGE}
 
       - name: Login to Quay
         uses: docker/login-action@v1
@@ -165,7 +170,9 @@ jobs:
         run: make -C downloader image
 
       - name: Export container image
-        run: docker save -o /tmp/downloader.tar ${DOWNLOADER_IMAGE}
+        run: | 
+          docker tag quay.io/konveyor/gitops-primer-downloader:latest ${DOWNLOADER_IMAGE}
+          docker save -o /tmp/downloader.tar ${DOWNLOADER_IMAGE}
 
       - name: Login to Quay
         uses: docker/login-action@v1
@@ -194,7 +201,9 @@ jobs:
         run: make -C webhook image
 
       - name: Export container image
-        run: docker save -o /tmp/webhook.tar ${WEBHOOK_IMAGE}
+        run: |
+          docker tag quay.io/konveyor/gitops-primer-webhook:latest ${WEBHOOK_IMAGE}
+          docker save -o /tmp/webhook.tar ${WEBHOOK_IMAGE}
 
       - name: Login to Quay
         uses: docker/login-action@v1
